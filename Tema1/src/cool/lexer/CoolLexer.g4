@@ -63,7 +63,7 @@ NOT        : [nN][oO][tT];
 TRUE       : 't' [rR][uU][eE];
 FALSE      : 'f' [aA][lL][sS][eE];
 
-SELF: 'self';
+//SELF: 'self';
 SELFTYPE: 'SELF_TYPE';
 
 ML_COMM_END: '*)' {
@@ -121,6 +121,7 @@ STRING: '"'(.)*?'"' {
         raiseError("Unterminated string constant");
     if (getText().contains("\u001A") == true)
         raiseError("EOF in string constant");
+    processString();
 };
 
 ERROR: .    ;
