@@ -35,6 +35,7 @@ class Program extends ASTNode {
 
     Program(LinkedList<Classz> classes, Token start) {
         super(start);
+        this.classes = classes;
     }
 
     public <T> T accept(ASTVisitor<T> visitor) {
@@ -51,7 +52,7 @@ class Classz extends ASTNode {
     Classz(Token name, Token type, LinkedList<Feature> features, Token start) {
         super(start);
         this.name = name;
-        this.type = Optional.of(type);
+        this.type = Optional.ofNullable(type);
         this.features = features;
     }
 
@@ -122,11 +123,13 @@ class Literal extends Expression {
 class BinaryOperator extends Expression {
     Expression left;
     Expression right;
+    Token op;
 
-    BinaryOperator(Expression left, Token op, Expression right) {
-        super(op);
+    BinaryOperator(Expression left, Token op, Expression right, Token start) {
+        super(start);
         this.left = left;
         this.right = right;
+        this.op = op;
     }
     public <T> T accept(ASTVisitor<T> visitor) {
         return visitor.visit(this);
@@ -137,7 +140,8 @@ class BinaryOperator extends Expression {
 class UnaryOperator extends Expression {
 
     Expression operand;
-    UnaryOperator(Expression operand, Token op) {
+    Token op;
+    UnaryOperator(Expression operand, Token op, Token start) {
         super(op);
         this.operand = operand;
     }
@@ -180,7 +184,7 @@ class ExplicitDispatch extends Dispatch {
     ExplicitDispatch(Token name, LinkedList<Expression> args, Dispatch object, Token dispatchClass, Token start) {
         super(name, args, start);
         this.object = object;
-        this.dispatchClass = Optional.of(dispatchClass);
+        this.dispatchClass = Optional.ofNullable(dispatchClass);
         this.name = name;
         this.args = args;
     }
@@ -257,7 +261,7 @@ class Local extends ASTNode {
         super(start);
         this.name = name;
         this.type = type;
-        this.value = Optional.of(value);
+        this.value = Optional.ofNullable(value);
     }
 
     public <T> T accept(ASTVisitor<T> visitor) {

@@ -66,10 +66,10 @@ public class ASTConstructionVisitor extends CoolParserBaseVisitor<ASTNode>{
     public ASTNode visitLatterUnaryExpr(CoolParser.LatterUnaryExprContext ctx) {
         if (ctx instanceof CoolParser.AllocationContext) {
             CoolParser.AllocationContext newCtx = (CoolParser.AllocationContext) ctx;
-            return new UnaryOperator(new Variable(newCtx.operand), newCtx.start);
+            return new UnaryOperator(new Variable(newCtx.operand), newCtx.start, newCtx.start);
         } else if (ctx instanceof CoolParser.LogicalNegationContext) {
             CoolParser.LogicalNegationContext newCtx = (CoolParser.LogicalNegationContext) ctx;
-            return new UnaryOperator((Expression) visit(newCtx.e), newCtx.start);
+            return new UnaryOperator((Expression) visit(newCtx.e), newCtx.start, newCtx.start);
         }
         return visit( ((CoolParser.FormerExprContext)ctx).compExpr());
     }
@@ -77,27 +77,27 @@ public class ASTConstructionVisitor extends CoolParserBaseVisitor<ASTNode>{
     public ASTNode visitCompExpr(CoolParser.CompExprContext ctx) {
         if (ctx.addSubExpr() != null)
             return visit(ctx.addSubExpr());
-        return new BinaryOperator((Expression) visit(ctx.left), ctx.op, (Expression) visit(ctx.right));
+        return new BinaryOperator((Expression) visit(ctx.left), ctx.op, (Expression) visit(ctx.right), ctx.start);
     }
 
     public ASTNode visitAddSubExpr(CoolParser.AddSubExprContext ctx) {
         if (ctx.mulDivExpr() != null)
             return visit(ctx.mulDivExpr());
-        return new BinaryOperator((Expression) visit(ctx.left), ctx.op, (Expression) visit(ctx.right));
+        return new BinaryOperator((Expression) visit(ctx.left), ctx.op, (Expression) visit(ctx.right), ctx.start);
     }
 
     public ASTNode visitMulDivExpr(CoolParser.MulDivExprContext ctx) {
         if (ctx.unaryExpr() != null)
             return visit(ctx.unaryExpr());
 
-        return new BinaryOperator((Expression) visit(ctx.left), ctx.op, (Expression) visit(ctx.right));
+        return new BinaryOperator((Expression) visit(ctx.left), ctx.op, (Expression) visit(ctx.right), ctx.start);
     }
 
     public ASTNode visitUnaryExpr(CoolParser.UnaryExprContext ctx) {
         if (ctx.accessExpr() != null)
             return visit(ctx.accessExpr());
 
-        return new UnaryOperator((Expression) visit(ctx.operand), ctx.op);
+        return new UnaryOperator((Expression) visit(ctx.operand), ctx.op, ctx.start);
     }
 
     public ASTNode visitAccessExpr(CoolParser.AccessExprContext ctx) {

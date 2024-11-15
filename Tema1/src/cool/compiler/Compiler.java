@@ -122,5 +122,11 @@ public class Compiler {
         }
         
         // TODO Print tree
+        var astContructionVisitor = new ASTConstructionVisitor();
+
+        var ast = astContructionVisitor.visit(globalTree);
+
+        var printVisitor = new PrintVisitor();
+        ast.accept(printVisitor);
     }
 }
